@@ -1,0 +1,60 @@
+﻿<Page
+    x:Class="HelloUnoNdc.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HelloUnoNdc"
+    xmlns:mux="using:Microsoft.UI.Xaml.Controls"
+    xmlns:octokit="using:Octokit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="8">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Adaptive">
+                <VisualState />
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ResultsListView.Visibility" Value="Collapsed" />
+                        <Setter Target="ResultsGridView.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Text="{x:Bind ViewModel.SearchText, Mode=TwoWay}" />
+        <Button Content="Search" Command="{x:Bind ViewModel.SearchCommand}" Grid.Row="1" />
+        <ListView x:Name="ResultsListView" ItemsSource="{x:Bind ViewModel.Users, Mode=OneWay}" Grid.Row="2">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="octokit:User">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Image Width="100" Source="{x:Bind AvatarUrl}" />
+                        <TextBlock VerticalAlignment="Center" Text="{x:Bind Login}" FontSize="20" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <GridView x:Name="ResultsGridView" Visibility="Collapsed" ItemsSource="{x:Bind ViewModel.Users, Mode=OneWay}" Grid.Row="2">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="octokit:User">
+                    <Grid Width="200" Height="100">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Width="100" Source="{x:Bind AvatarUrl}" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind Login}" FontSize="20" />
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+</Page>
